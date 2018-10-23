@@ -1,39 +1,43 @@
 # coding:utf-8
+import random
+import time
+import httplib
 import json
-from random import random
 
+
+# db = MySQLdb.connect("localhost", "root", "pass", "llfx")
+# db = MySQLdb.connect(host='127.0.0.1',user='root',passwd='U_njwk_0515', charset='utf8')
+
+# db.select_db('llfx');
 import requests
-from django.http import HttpResponse, request
-from django.shortcuts import render
+
+def http_post(url='localhost', jasonstr=''):
+    conn = httplib.HTTPConnection("localhost")
+    headers = {"Content-type": "application/json"}  # application/x-www-form-urlencoded
+    conn.request("POST", "/core-oper/rest/bindCard", jasonstr, headers)
+    response = conn.getresponse()
+    data = response.read()
+    if response.status == 200:
+        result = "success"
+        returnContent = data
+    else:
+        result = "fail"
+        returnContent = ''
+    conn.close()
+
+    return result, returnContent
 
 
-def index(request):
-    return HttpResponse(u"欢迎欢迎")
-
-def view(request):
-    str = u"我在学Django，用它来建网站"
-    return render(request, 'view.html',{'str': str})
-
-
-def add(request):
-    a = request.GET['a']
-    b = request.GET['b']
-    c = int(a)+int(b)
-    return HttpResponse(str(c))
-
-def add2(request, a, b):
-    c = int(a) + int(b)
-    return HttpResponse(str(c))
-
-
-def subscriber():
+def runTask(day=0, hour=0, min=0, second=0):
     counter = 0
     while True:
         counter = counter + 1
         # time.sleep(0.5)
         subscriberOrder(counter)
+        notifyOrder()
 
-#模拟用户订购订单--模拟下游
+
+
 def subscriberOrder(cnt):
     url = 'http://127.0.0.1/api/llauth/order'
     headers = {'Content-Type': 'application/json'}
@@ -66,39 +70,16 @@ def subscriberOrder(cnt):
     # jasonstr = json.JSONEncoder().encode(req)
 
     response = requests.post(url=url, headers=headers, data=json.dumps(req))
-    # print response.text
+    print response.text
     if (response.status_code == requests.codes.ok):
-        pass
-        # print '%s 提交成功 %s.' % (cnt,mobile)
+        print '%s 提交成功 %s.' % (cnt,mobile)
     else:
-        pass
-        # print '%s 提交失败 %s.' % (cnt,mobile)
+        print '%s 提交失败 %s.' % (cnt,mobile)
     # result, returnContent = http_post(url, jasonstr)
     # print result, returnContent
 
-#模拟服务端接受数据并返回--模拟上游
 def notifyOrder():
-    data = json.loads(request.body)
-    custom_decks = data['payload']['data']
+   pass
 
-    orderid = '1378' + str(random.randint(1000000, 9999999))
-    resp = ({
-        "header": {
-            "errcode": "0",
-            "errmsg": "提交成功"
-        },
-        "payload": {
-            "data": {
-                "orderid": orderid,
-            }
-        }
-    })
-    response = requests.post(url=url, headers=headers, data=json.dumps(req))
-    # print response.text
-    if (response.status_code == requests.codes.ok):
-        pass
-        # print '%s 提交成功 %s.' % (cnt,mobile)
-    else:
-        pass
-
-    pass
+# runTask(work, min=0.5)
+runTask(day=1, hour=2, min=1)

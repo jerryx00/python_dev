@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>aa </title>
+</head>
+<body>
+{% if request.user.is_authenticated %}
+    {{ request.user.username }}，您好！
+{% else %}
+    请登陆，这里放登陆链接
+{% endif %}
+
+<br/>
+
+<a href="/add/4/5">计算 4+5</a>
+
+=========
+<a href="/add?a=4&b=55">计算 4+5</a>
+</body>
+</html>

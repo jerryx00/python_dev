@@ -41,3 +41,10 @@ class Article(models.Model):
     class Meta:
         verbose_name = '教程'
         verbose_name_plural = '教程'
+
+class Userinfo(models.Model):
+    #如果没有models.AutoField，默认会创建一个id的自增列
+    name = models.CharField(max_length=30)
+    email = models.EmailField()
+    memo = models.TextField()
+

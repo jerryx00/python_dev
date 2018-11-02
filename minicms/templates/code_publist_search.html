@@ -1,0 +1,160 @@
+<table class="table table-hover table-bordered" style="margin-top:5px;min-width:1300px;" >
+  <thead>
+      <tr style="background-color: #f5f5f5; text-align:center">
+
+        <th>站点名称</th>
+        <th>IP地址</th>
+        <th>站点目录</th>
+        <th>项目</th>
+        <th>描述</th>
+        <th>版本号</th>
+        <th>版本信息</th>
+        <th>提交作者</th>
+        <th>发布时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in publist_all_obj %}
+        <tr name="tbody">
+          <td>{{ i.gitcode.git_name }}</td>
+          <td>{{ i.host_ip.host_ip }}</td>
+          <td>{{ i.publist_dir }}</td>
+          <td>{{ i.gitcode.project.project_name }}</td>
+          <td>{{ i.publist_msg }}</td>
+          <td>
+              <div style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">
+                  {{ i.current_version }}
+              </div>
+          </td>
+          <td>
+              <div style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">
+                  {{ i.version_info }}
+              </div>
+
+          </td>
+          <td>{{ i.author }}</td>
+          <td>{{ i.publist_date }}</td>
+          <td style="padding-left:5px;">
+            <a href="javascript:;" name="publist" style="text-decoration:none;" publist_id="{{ i.id }}"><span class="fa fa-cloud-download" data-toggle="tooltip" data-placement="top" title="版本更新"></span> </a>&nbsp
+            <a href="/code/gitlog/{{ i.id }}/" name="publist-log" style="text-decoration:none;" publist_id="{{ i.id }}" data-toggle="tooltip" data-placement="top" title="更新记录"><span class="fa fa-list"></span></a>&nbsp
+            <a href="javascript:;" name="del-publist" style="text-decoration:none;" publist_id="{{ i.id }}" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa  fa-trash"></span> </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+</table>
+<div class="text-right" style="margin-top:-30px;padding-right:9%">
+  <ul class="pagination" id="pagination">
+  </ul>
+</div>
+
+<script>
+
+
+//前端分页
+var limit = 14; //每页显示数据条数
+var total = $('#site_table').find('tr').length;
+var allPage = total%limit>0?parseInt(total/limit)+1:parseInt(total/limit);
+
+function doPage(n){
+    if(allPage>1){
+        var prevPage='',nextPage='',pageHtml='';
+
+        if (n===1) {
+            prevPage = '<li class="disabled"><a href="javascript:;">上一页</a></li>';
+            nextPage = '<li data-page="'+ (n+1) +'"><a href="javascript:;">下一页</a></li>';
+        } else if(n===allPage){
+            prevPage = '<li data-page="'+ (n-1) +'"><a href="javascript:;">上一页</a></li>';
+            nextPage = '<li class="disabled"><a href="javascript:;">下一页</a></li>';
+        } else {
+            prevPage = '<li data-page="'+ (n-1) +'"><a href="javascript:;">上一页</a></li>';
+            nextPage = '<li data-page="'+ (n+1) +'"><a href="javascript:;">下一页</a></li>';
+        }
+        for(var i=1;i<=allPage;i++){
+            if (n===i) {
+                pageHtml += '<li class="active"><a href="javascript:;">'+ i +'</a></li>';
+            }else{
+                pageHtml += '<li data-page="'+ i +'"><a href="javascript:;">'+ i +'</a></li>';
+            }
+        }
+        $('#pagination').html(prevPage+pageHtml+nextPage);
+    }
+
+    $('#site_table').find('tr[name="tbody"]').hide();
+    if(n===1){
+        $('#site_table').find('tr[name="tbody"]:lt('+ limit +')').show();
+    }else{
+        $('#site_table').find('tr[name="tbody"]:gt('+ ((n-1)*limit-1) +'):lt('+ limit +')').show();
+    }
+
+}
+
+doPage(1);
+
+$('#pagination').on('click', 'li a', function(event) {
+    event.preventDefault();
+    var curr = parseInt($(this).parent().data('page'));
+
+    if (!isNaN(curr)) {
+        doPage(curr);
+    }
+});
+
+
+
+//更新代码
+$("td a[name='publist']").click(function(){
+   var publist_id = $(this).attr('publist_id');
+   var statu = confirm("是否确认更新！");
+   if (statu==true)
+    {
+        $.ajax({
+            url: "/code/publist/",
+            type: "PUT",
+            data: JSON.stringify({'publist_id':publist_id}),
+            success: function(data) {
+                if(data=="perms_false"){
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append("权限不足，请联系管理员");
+                    $("#alert").show();
+                }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data);
+                    $("#alert").show();
+                }
+
+             }
+        });
+    }
+});
+
+
+//删除代码
+$("td a[name='del-publist']").click(function(){
+   var publist_id = $(this).attr('publist_id');
+   var statu = confirm("是否确认删除！");
+   if (statu==true)
+    {
+        $.ajax({
+            url: "/code/publist/",
+            type: "DELETE",
+            data: JSON.stringify({'publist_id':publist_id}),
+            success: function(data) {
+                if(data=="perms_false"){
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append("权限不足，请联系管理员");
+                    $("#alert").show();
+                }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data);
+                    $("#alert").show();
+                }
+
+             }
+        });
+    }
+});
+
+</script>

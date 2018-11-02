@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from news import views
+from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('show/', views.show),
+    path('user_index/', views.user_index, name='user_index'),  #
+    path('add/', views.add, name='add'),
+    path('', views.index),  # new
 ]

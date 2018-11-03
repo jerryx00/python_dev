@@ -1,4 +1,4 @@
-"""minicms URL Configuration
+"""mtrops_v2 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
@@ -13,16 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
 
-from news import views
-from django.urls import include
+from app_log import views
+from django.urls import path,include
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('user_index/', views.user_index, name='user_index'),  #
-    path('add/', views.add, name='add'),
-    path('', views.index),  # new
-    path("log/",include("app_log.urls")),
+    path("opslog/",views.OpsLog.as_view()),
+    path("userlog/",views.UserLog.as_view()),
 ]

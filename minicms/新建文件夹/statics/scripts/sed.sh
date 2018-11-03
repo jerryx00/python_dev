@@ -1,1 +1,0 @@
-sed -i "/0 2 \* \* \* ls/d"  /var/spool/cron/root

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news',
+    'app_auth',
     'app_log'
 ]
 
@@ -105,10 +106,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
+#自定义登录认证中间件
+AUTHENTICATION_BACKENDS = (
+    'app_auth.views.CustomBackend',
+)
+
+
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'zh_hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

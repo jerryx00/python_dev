@@ -543,7 +543,8 @@ $("td a[name='del-menu']").click(function(){
 
 //添加权限
 $("#sub-perms").click(function(){
-    var perms_title = $("#perms-title").val();
+    var perms_title = '1';
+    // perms_title = $("#perms-title").val();
     var perms_req = $("#perms-req").val();
     var menus_id = $("#menus-id").val();
     var perms_url = $("#perms-url").val();
@@ -599,7 +600,8 @@ $('td a[name="edit-perms"]').click(function() {
 //修改权限信息
 $("#sub-edit-perms").click(function() {
     var perms_id = $(this).attr("perms_id");
-    var perms_title = $("#edit-perms-title").val();
+    var perms_title = '1';
+    // var perms_title = $("#edit-perms-title").val();
     var perms_req = $("#edit-perms-req").val();
     var perms_url = $("#edit-perms-url").val();
     var menus_id = $("#edit-menus-id").val();

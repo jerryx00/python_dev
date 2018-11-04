@@ -446,7 +446,7 @@ class UserMG(View):
             role_obj = user.role.all()
             role_title = []
             for i in  role_obj:
-                role_title.append(i.role_title)
+                    role_title.append(i.role_title)
 
             if user.user_name in online_user:
                 status = "在线"

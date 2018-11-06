@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'news',
     'app_auth',
-    'app_log'
+    'app_log',
+    'djcelery',       #加入djcelery
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'statics','media')
 
 
 MEDIA_URL = '/media/'
+
 

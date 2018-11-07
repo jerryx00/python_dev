@@ -16,17 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from minicms import views
+from news import views
 from django.urls import include
 from app_auth.views import Index
 
-
 urlpatterns = [
-    path("",Index.as_view()),
-    path('admin/', admin.site.urls),
-    path("log/",include("app_log.urls")),
-    path("auth/",include("app_auth.urls")),
-    path("news/",include("news.urls")),
-
-    path(r'leijun/', views.leijun),
+    path('user_index/', views.user_index, name='user_index'),  #
+    path('add/', views.add, name='add'),
 ]

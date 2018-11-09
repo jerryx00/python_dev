@@ -1,14 +1,46 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-  <title>
-    
-  </title>
-</head>
-<body>
-<table>
-  <thead>
-   <tr style="background-color: #f5f5f5;">
+﻿{% extends "base.html" %}
+
+
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/admin.css">
+
+{% endblock %}
+
+
+{% block center %}
+
+
+<!--头部导航-->
+<div class="panel panel-default center-top" style="min-width:1300px;">
+  <div class="panel-body">
+    <ol class="breadcrumb" style="margin-bottom: 0px;background-color: #FFFFFF;">
+      <li><a href="/" style="color: #377CD8;">首页</a></li>
+      <li><a href="javascript:;">后台管理</a></li>
+      <li class="active">{{ title }}</li>
+    </ol>
+  </div>
+</div>
+
+
+
+<!--用户信息-->
+<div class="panel panel-default center-top" style="min-width:1300px;">
+  <div class="panel-heading">
+      <div class="row" style="padding-top:5px;padding-left:10px;">
+          <div class="col-sm-6">
+              <a href="javascript:;" class="btn btn-sm btn-success" data-toggle="modal" data-target="#userModal"> 添加用户 </a>
+
+
+          </div>
+
+
+      </div>
+  </div>
+  <div class="panel-body">
+      <table class="table table-hover table-bordered">
+          <thead>
+            <tr style="background-color: #f5f5f5;">
               <th>用户名</th>
               <th>姓名</th>
               <th>头像</th>
@@ -19,7 +51,229 @@
               <th>操作</th>
             </tr>
           </thead>
-  </thead>
-</table>
-</body>
-</html>
+          <tbody>
+            {% for user in user_list %}
+          <tr name="tbody">
+              <td style="padding-top: 20px;">{{ user.user_name }}</td>
+               <td style="padding-top: 20px;">{{ user.ready_name }}</td>
+              <td ><img src="/static/img/user/alexli.jpg"  class="img-circle" style="width: 40px;"></td>
+              <td style="padding-top: 20px;">{{ user.role_title }}</td>
+              <td style="padding-top: 20px;">{{ user.phone }}</td>
+              <td style="padding-top: 20px;">{{ user.email }}</td>
+              {% if user.status == "在线" %}
+              <td style="padding-top: 20px;color: #00B83F">{{ user.status }}</td>
+              {% else %}
+              <td style="padding-top: 20px;">{{ user.status }}</td>
+              {% endif %}
+              <td style="padding-top: 20px;">
+                  <a href="javascript:;" name="edit-user" user_id="{{ user.user_id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="修改信息"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
+                  <a href="javascript:;" name="ch-passwd"  user_id="{{ user.user_id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="top" title="修改密码"><span class="fa fa-cog"></span> </a>&nbsp;&nbsp;&nbsp;
+                  <a href="javascript:;" name="add-remoteuser"  user_id="{{ user.user_id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="top" title="远程用户"><span class="fa fa-user-plus"></span> </a>&nbsp;&nbsp;&nbsp;
+                  <a href="javascript:;" name="del-user"  user_id="{{ user.user_id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+
+      </table>
+
+    <div class="text-right" style="margin-top:-30px;padding-right:9%">
+      <ul class="pagination" id="pagination"></ul>
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+<!-- Modal -->
+{% block modal %}
+
+<!--添加用户-->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top:135px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="userModalLabel">添加用户</h4>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label >用户</label>
+            <input  class="form-control"  placeholder="用户" id="user-name">
+          </div>
+          <div class="form-group">
+            <label >真实姓名</label>
+            <input  class="form-control"  placeholder="真实姓名" id="ready-name">
+          </div>
+
+          <div class="form-group">
+            <label >密码</label>
+            <input type="password" class="form-control"  placeholder="密码" id="passwd">
+          </div>
+
+          <div class="form-group">
+            <label >确认密码</label>
+            <input type="password" class="form-control"  placeholder="确认密码" id="repasswd">
+          </div>
+
+          <div class="form-group">
+            <label >角色组</label>
+            <select  class="form-control" id="role">
+                {% for role in role_list %}
+              <option value="{{ role.role_id }}">{{ role.role_title }}</option>
+                {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label >手机号码</label>
+            <input  class="form-control"  placeholder="手机号码" id="phone">
+          </div>
+
+          <div class="form-group">
+            <label >邮箱地址</label>
+            <input type="email" class="form-control"  placeholder="邮箱地址" id="email">
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="add-user">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--修改用户信息-->
+<div class="modal fade" id="edit-userModal" tabindex="-1" role="dialog" aria-labelledby="edit-userModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top:135px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="edit-userModalLabel">添加用户</h4>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label >用户</label>
+            <input  class="form-control"  placeholder="用户" id="edit-user-name">
+          </div>
+          <div class="form-group">
+            <label >真实姓名</label>
+            <input  class="form-control"  placeholder="真实姓名" id="edit-ready-name">
+          </div>
+
+          <div class="form-group">
+            <label >角色组</label>
+            <select  class="form-control"  id="edit-role">
+                {% for role in role_list %}
+              <option value="{{ role.role_id }}">{{ role.role_title }}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label >手机号码</label>
+            <input  class="form-control"  placeholder="手机号码" id="edit-phone">
+          </div>
+             <div class="form-group">
+            <label >邮箱地址</label>
+            <input type="email" class="form-control"  placeholder="邮箱地址" id="edit-email">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="sub-edit-user">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--修改用户密码-->
+<div class="modal fade" id="rbac-passwdModal" tabindex="-1" role="dialog" aria-labelledby="rbac-passwdModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top:135px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="rbac-passwdModalLabel">修改密码</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label >新密码</label>
+            <input  class="form-control" type="password"  placeholder="新密码" id="rbac-new-passwd">
+          </div>
+          <div class="form-group">
+            <label >再次输入新密码</label>
+            <input  class="form-control" type="password"  placeholder="再次输入新密码" id="rbac-rnew-passwd">
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="rbac-sub-passwd">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--添加远程管理用户-->
+<div class="modal fade" id="rbac-remoteModal" tabindex="-1" role="dialog" aria-labelledby="rbac-remoteModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="margin-top:135px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="rbac-remoteModalLabel">添加远程管理用户</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label>远程管理用户</label>
+            <input  class="form-control" type="text"  placeholder="新密码" id="lg-user">
+          </div>
+
+          <div class="form-group">
+            <label >密码</label>
+            <input  class="form-control" type="password"  placeholder="密码" id="lg-passwd">
+          </div>
+          <div class="form-group">
+            <label >秘钥</label>
+              <textarea  class="form-control"  placeholder="登录秘钥" id="lg-key"></textarea>
+          </div>
+          <div class="form-group">
+            <label >秘钥密码</label>
+              <input  class="form-control" type="password"  placeholder="秘钥密码" id="lg-key-pass">
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="sub-remote">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock  %}
+
+
+{% block js %}
+
+<script type="text/javascript" src="/static/js/auth_v2.js"></script>
+
+<script>
+
+
+
+</script>
+
+{% endblock %}
+
+
+

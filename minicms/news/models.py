@@ -55,4 +55,13 @@ class Test1(models.Model):
     email = models.EmailField()
     memo = models.TextField()
 
+class Goods(models.Model):
+    #如果没有models.AutoField，默认会创建一个id的自增列
+    flxid = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    price = models.FloatField
+    comment = models.CharField(max_length=30)
+
+
+
 

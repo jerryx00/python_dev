@@ -1,3 +1,4 @@
 .idea/* diff=nodiff
 dataSources.xml diff=nodiff
 dataSources.local.xml diff=nodiff
+*.pyc diff=nodiff

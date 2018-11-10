@@ -34,7 +34,9 @@ cmake-build-*/
 out/
 .idea/
 .settings/
-target/  
+target/ 
+__pycache__/
+*.pyc 
 
 
 # File-based project format

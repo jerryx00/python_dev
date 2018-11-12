@@ -115,7 +115,7 @@ class Place(models.Model):
         return "%s the place" % self.name
 
 class Restaurant(models.Model):
-    # 在表中创建了一个字段 place_id 关联 Place 表
+    # 在当前表中创建了一个字段 place_id 关联 Place 表
     place = models.OneToOneField(
         Place,
         on_delete=models.CASCADE,
@@ -128,7 +128,7 @@ class Restaurant(models.Model):
         return "%s the restaurant" % self.place.name
 
 class Waiter(models.Model):
-    #在表中创建了一个字段 restaurant_id 关联 Restaurant 表
+    #在当前表中创建了一个字段 restaurant_id 关联 Restaurant 表
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 

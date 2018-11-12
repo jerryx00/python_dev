@@ -136,6 +136,45 @@ class Waiter(models.Model):
         return "%s the waiter at %s" % (self.name, self.restaurant)
 
 
+#==========================
+
+#部门表
+class Department(models.Model):
+    code = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):              # __unicode__ on Python 2
+        return "the department code:%s,name: %s" % (self.code, self.name)
+
+#枚举示例
+#人员表
+class Person(models.Model):
+    SHIRT_SIZES = (
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
+    )
+    name = models.CharField(max_length=60)
+    shirt_size = models.CharField(max_length=1, choices=SHIRT_SIZES)
+    # 在当前表中创建了一个字段 restaurant_id 关联 Restaurant 表
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    def __str__(self):              # __unicode__ on Python 2
+        return "name:%s " % (self.name)
+
+
+#一对一
+class Account(models.Model):
+    name = models.CharField(max_length=60, verbose_name='用户名')
+    password = models.CharField(max_length=100, verbose_name='密码')
+    created_at = models.DateField(auto_now=True, verbose_name='创建时间')
+    updated_at = models.DateField(auto_now=True, verbose_name='修改时间')
+    # 在当前表中创建了一个字段 userinfo_id 关联 Userinfo 表
+    userinfo = models.OneToOneField(Userinfo, on_delete=models.CASCADE)
+    def __str__(self):              # __unicode__ on Python 2
+        return "name:%s " % (self.name)
+
+
+
 
 
 

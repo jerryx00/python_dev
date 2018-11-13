@@ -19,6 +19,11 @@ class Column(models.Model):
         verbose_name_plural = '栏目'
         ordering = ['name']  # 按照哪个栏目排序
 
+# 一本书由一家出版社出版，一家出版社可以出版很多书。一本书由多个作者合写，一个作者可以写很多书。
+# 一个作者一个对应一个登录帐户
+# 出版社
+class Publisher(models.Model):
+    name = models.CharField(max_length=20)
 #作家表
 class Author(models.Model):
     first_name = models.CharField(max_length=30)
@@ -29,14 +34,20 @@ class Author(models.Model):
         return "%s %s" % (self.first_name, self.last_name)
 
 #出版物
-class Publication(models.Model):
+class Book(models.Model):
+    name = models.CharField(max_length=30)
     title = models.CharField(max_length=30)
+    pub = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+    authors = models.ManyToManyField(Author)
 
     def __str__(self):              # __unicode__ on Python 2
         return self.title
 
     class Meta:
         ordering = ('title',)
+
+
+
 
 @python_2_unicode_compatible
 class Article(models.Model):
@@ -46,7 +57,7 @@ class Article(models.Model):
     slug = models.CharField('网址', max_length=256, db_index=True)
 
     author = models.ForeignKey(Author, blank=True, null=True, verbose_name='作者',on_delete=models.CASCADE)
-    publications = models.ManyToManyField(Publication)
+    publications = models.ManyToManyField(Publisher)
     content = models.TextField('内容', default='', blank=True)
 
     published = models.BooleanField('正式发布', default=True)
@@ -60,6 +71,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = '教程'
         verbose_name_plural = '教程'
+
 
 #用户表
 class Userinfo(models.Model):
@@ -156,7 +168,7 @@ class Person(models.Model):
     )
     name = models.CharField(max_length=60)
     shirt_size = models.CharField(max_length=1, choices=SHIRT_SIZES)
-    # 在当前表中创建了一个字段 restaurant_id 关联 Restaurant 表
+    # 在当前表中创建了一个字段 restaurant_id 关联 Restaurant 表,特性：外键、非空
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     def __str__(self):              # __unicode__ on Python 2
         return "name:%s " % (self.name)
@@ -167,8 +179,8 @@ class Account(models.Model):
     name = models.CharField(max_length=60, verbose_name='用户名')
     password = models.CharField(max_length=100, verbose_name='密码')
     created_at = models.DateField(auto_now=True, verbose_name='创建时间')
-    updated_at = models.DateField(auto_now=True, verbose_name='修改时间')
-    # 在当前表中创建了一个字段 userinfo_id 关联 Userinfo 表
+    updated_at = models.DateField(auto_now_add=True, verbose_name='修改时间')
+    # 在当前表中创建了一个字段 userinfo_id 关联 Userinfo 表,特性：外键、非空、唯一
     userinfo = models.OneToOneField(Userinfo, on_delete=models.CASCADE)
     def __str__(self):              # __unicode__ on Python 2
         return "name:%s " % (self.name)

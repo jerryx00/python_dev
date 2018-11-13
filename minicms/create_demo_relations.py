@@ -9,7 +9,7 @@ create some records for demo database
 '''
 
 from minicms.wsgi import *
-from news.models import Place,Restaurant,Waiter,Person,Department
+from news.models import Place,Restaurant,Waiter,Person,Department,Publisher, Book
 
 
 def main():

@@ -22,6 +22,5 @@ from app_auth.views import Index
 
 urlpatterns = [
     path('user_index/', views.user_index, name='user_index'),  #
-    path('add/', views.add, name='add'),
-    path('goods/', views.add, name='goods'),
+    path('author/', views.Author.as_view()),
 ]

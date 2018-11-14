@@ -28,10 +28,12 @@ class Publisher(models.Model):
 class Author(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    name = models.CharField(max_length=60, null=True)
+    mobile = models.CharField(max_length=30, null=True)
     email = models.EmailField()
 
     def __str__(self):              # __unicode__ on Python 2
-        return "%s %s" % (self.first_name, self.last_name)
+        return "%s %s %" % (self.name, self.first_name, self.last_name)
 
 #出版物
 class Book(models.Model):

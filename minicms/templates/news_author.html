@@ -29,7 +29,7 @@
   <div class="panel-heading">
       <div class="row" style="padding-top:5px;padding-left:10px;">
           <div class="col-sm-6">
-              <a href="javascript:;" class="btn btn-sm btn-success" data-toggle="modal" data-target="#userModal"> 添加作者 </a>
+              <a href="javascript:;" class="btn btn-sm btn-success" data-toggle="modal" data-target="#authorModal"> 添加作者 </a>
 
           </div>
 
@@ -54,8 +54,8 @@
               <td ><img src="/static/img/user/alexli.jpg"  class="img-circle" style="width: 40px;"></td>
               <td style="padding-top: 20px;">{{ i.email }}</td>
               <td style="padding-top: 20px;">
-                  <a href="javascript:;" name="edit-user" user_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="查看信息"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
-                  <a href="javascript:;" name="del-user"  user_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>
+                  <a href="javascript:;" name="edit-author" author_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="修改"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
+                  <a href="javascript:;" name="del-author"  author_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>
               </td>
             </tr>
             {% endfor %}
@@ -79,12 +79,12 @@
 {% block modal %}
 
 <!--添加用户-->
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel">
+<div class="modal fade" id="authorModal" tabindex="-1" role="dialog" aria-labelledby="authorModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="margin-top:135px;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="userModalLabel">添加作者</h4>
+        <h4 class="modal-title" id="authorModalLabel">添加作者</h4>
       </div>
       <div class="modal-body">
 
@@ -106,7 +106,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="add-user">提交</button>
+        <button type="button" class="btn btn-primary" id="add-author">提交</button>
       </div>
     </div>
   </div>
@@ -114,12 +114,12 @@
 
 
 <!--修改用户信息-->
-<div class="modal fade" id="edit-userModal" tabindex="-1" role="dialog" aria-labelledby="edit-userModalLabel">
+<div class="modal fade" id="edit-authorModal" tabindex="-1" role="dialog" aria-labelledby="edit-authorModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="margin-top:135px;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="edit-userModalLabel">修改作者</h4>
+        <h4 class="modal-title" id="edit-authorModalLabel">修改作者</h4>
       </div>
       <div class="modal-body">
 
@@ -139,7 +139,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="sub-edit-user">提交</button>
+        <button type="button" class="btn btn-primary" id="sub-edit-author">提交</button>
       </div>
     </div>
   </div>
@@ -153,6 +153,80 @@
 <script type="text/javascript" src="/static/js/auth_v2.js"></script>
 
 <script>
+
+////////////////////////作者管理////////////////////////////
+//添加作者
+
+//获取作者修改信息
+$('td a[name="edit-author"]').click(function(){
+    var author_id = $(this).attr("author_id");
+        $.ajax({
+            url: "/news/author/",
+            type: "PUT",
+            data: JSON.stringify({'author_id':author_id}),
+            success: function(data) {
+                        var info = eval('(' + data + ')');
+                        $("#edit-name").val(info.name);
+                        $("#edit-mobile").val(info.mobile);
+                        $("#edit-email").val(info.email);
+                        $("#sub-edit-author").attr('author_id', info.author_id);
+                        $("#edit-authorModal").modal('show');
+                    }
+
+
+    });
+});
+
+//保存作者信息
+$("#sub-edit-author").click(function(){
+    var author_id = $(this).attr('author_id');
+    var name = $("#edit-name").val();
+    var mobile = $("#edit-mobile").val();
+    var email = $("#edit-email").val();
+    var statu = confirm("是否确认修改！");
+     $.ajax({
+            url: "/news/author/",
+            type: "PUT",
+            data: JSON.stringify({'action':'edit','name':name, 'mobile':mobile,'email':email,'author_id':user_id}),
+            success: function(data) {
+                if(data=="perms_false"){
+                $("#msg-alert").empty();
+                $("#msg-alert").append("权限不足，请联系管理员");
+                $("#alert").show();
+            }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data);
+                    $("#edit-userModal").modal("hide");
+                    $("#alert").show();
+                }
+        }
+    });
+});
+//删除作者
+$("td a[name='del-author']").click(function(){
+   var author_id = $(this).attr('author_id');
+   var statu = confirm("是否确认删除！");
+   if (statu==true)
+    {
+         $.ajax({
+            url: "/news/author/",
+            type: "DELETE",
+            data: JSON.stringify({'author_id':author_id}),
+            success: function(data) {
+                console.log(data);
+                if(data=="perms_false"){
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append("权限不足，请联系管理员");
+                    $("#alert").show();
+            }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data);
+                    $("#alert").show();
+                }
+             }
+        });
+    }
+});
 
 
 

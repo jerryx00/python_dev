@@ -259,7 +259,7 @@ $("td a[name='ch-passwd']").click(function(){
 });
 
 
-
+// =============================================
 //设置远程管理用户
 $("td a[name='add-remoteuser']").click(function(){
     var user_id = $(this).attr('user_id');

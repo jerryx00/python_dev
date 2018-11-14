@@ -18,8 +18,6 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-from app_auth.perms_control import menus_list,perms_list
-from django.contrib.sessions.models import Session
 
 def index(request):
     # return HttpResponse(u"welcome!")
@@ -42,6 +40,8 @@ def goods(request):
 
 class Author(View):
     """作家管理"""
+
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(Author,self).dispatch(request, *args, **kwargs)
 
@@ -49,3 +49,31 @@ class Author(View):
         title = '作家管理'
         author_list = news_db.Author.objects.all()
         return render(request, 'news_author.html', locals())
+    def post(self,request):
+        """修改用户"""
+        req_info = eval(request.body.decode())
+        author_id = req_info.get("author_id")
+        name = req_info.get("name")
+        mobile = req_info.get("mobile")
+        email = req_info.get("email")
+        action = req_info.get("action")
+        if action:
+            author_obj = news_db.Author.objects.get(id=author_id)
+            author_obj.save()
+            data = "作者 %s 修改成功,请刷新查看！" % name
+        else:
+            """获取修改的作者信息"""
+            author_obj = news_db.Author.objects.get(id=author_id)
+            data = json.dumps({"name":author_obj.name, "email":author_obj.email,
+                                        "mobile":author_obj.mobile,"author_id":author_obj.id})
+
+        return HttpResponse(data)
+
+
+    def delete(self,request):
+        """删除用户"""
+        req_info = eval(request.body.decode())
+        author_id = req_info.get("author_id")
+        news_db.Author.objects.get(id=author_id).delete()
+        data = "作者已删除,请刷新查看！"
+        return HttpResponse(data)

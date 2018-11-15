@@ -57,6 +57,9 @@ def perms_check(func):
         req_url = "/".join(req_url.split("/")[:3]) + "/"
 
         req_method= request.method
+
+        if request.session['role_id']  == 1:
+            return func(request, *args, **kwargs)
         
         try:
             try:

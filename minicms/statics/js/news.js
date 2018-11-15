@@ -42,7 +42,6 @@ $('td a[name="edit-author"]').click(function(){
 
 //修改-保存作者信息
 $("#sub-edit-author").click(function(){
-    var statu = confirm("是否确认修改！");
     var author_id = $(this).attr('author_id');
     var name = $("#edit-name").val();
     var mobile = $("#edit-mobile").val();

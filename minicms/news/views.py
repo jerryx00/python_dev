@@ -49,7 +49,25 @@ class Author(View):
         title = '作家管理'
         author_list = news_db.Author.objects.all()
         return render(request, 'news_author.html', locals())
-    def post(self,request):
+
+    def post(self, request):
+        """添加用户"""
+        name = request.POST.get("name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+
+        try:
+            # django自带用户信息表
+            author_obj = news_db.Author(name=name, email=email,mobile=mobile)
+            author_obj.save()
+            data = "作者 %s 添加成功,请刷新查看！" % name
+
+        except Exception as e:
+            data = "作者添加失败：\n %s " % e
+
+        return HttpResponse(data)
+
+    def put(self,request):
         """修改用户"""
         req_info = eval(request.body.decode())
         author_id = req_info.get("author_id")
@@ -59,6 +77,9 @@ class Author(View):
         action = req_info.get("action")
         if action:
             author_obj = news_db.Author.objects.get(id=author_id)
+            author_obj.name = name
+            author_obj.mobile = mobile
+            author_obj.email = email
             author_obj.save()
             data = "作者 %s 修改成功,请刷新查看！" % name
         else:

@@ -56,15 +56,21 @@ class Author(View):
         mobile = request.POST.get("mobile")
         email = request.POST.get("email")
 
+        next_url = request.get_full_path()
+        print(next_url)
         try:
             # django自带用户信息表
             author_obj = news_db.Author(name=name, email=email,mobile=mobile)
             author_obj.save()
-            data = "作者 %s 添加成功,请刷新查看！" % name
+            msg = "作者 %s 添加成功,请刷新查看！" % name
+            data = {'msg':msg,'url':next_url}
+
 
         except Exception as e:
-            data = "作者添加失败：\n %s " % e
+            msg = "作者添加失败：\n %s " % e
+            data = {'msg': msg, 'url': next_url}
 
+        data = json.dumps(data)
         return HttpResponse(data)
 
     def put(self,request):
@@ -75,13 +81,19 @@ class Author(View):
         mobile = req_info.get("mobile")
         email = req_info.get("email")
         action = req_info.get("action")
+
+        next_url = request.get_full_path()
+
         if action:
             author_obj = news_db.Author.objects.get(id=author_id)
             author_obj.name = name
             author_obj.mobile = mobile
             author_obj.email = email
             author_obj.save()
-            data = "作者 %s 修改成功,请刷新查看！" % name
+            msg = "作者 %s 修改成功,请刷新查看！" % name
+            data = {'msg': msg, 'url': next_url}
+            data = json.dumps(data)
+
         else:
             """获取修改的作者信息"""
             author_obj = news_db.Author.objects.get(id=author_id)

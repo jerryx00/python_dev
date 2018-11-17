@@ -13,9 +13,10 @@ $("#add-author").click(function(){
             $("#alert").show();
         }else {
             $("#msg-alert").empty();
-            $("#msg-alert").append(data);
+            $("#msg-alert").append(data.msg);
             $("#authorModal").modal("hide");
             $("#alert").show();
+            window.location.href = data.url;
         }
     })
 
@@ -53,9 +54,10 @@ $("#sub-edit-author").click(function(){
             data: JSON.stringify({'action':'edit','name':name, 'mobile':mobile,'email':email,'author_id':author_id}),
             success: function(data) {
                     $("#msg-alert").empty();
-                    $("#msg-alert").append(data);
+                    $("#msg-alert").append(data.msg);
                     $("#edit-authorModal").modal("hide");
                     $("#alert").show();
+                    window.location.href = data.url;
 
         }
     });

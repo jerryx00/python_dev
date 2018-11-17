@@ -88,3 +88,97 @@ $("td a[name='del-author']").click(function(){
     }
 });
 
+
+////////////////////////书籍管理////////////////////////////
+//添加保存书籍
+$("#add-book").click(function(){
+    var name = $("#add-name").val();
+    var title = $("#add-title").val();
+    var pub = $("#add-pub").val();
+
+    $.post("/news/book/",{'name':name,'title':title,'pub':pub},function(data){
+        if(data=="perms_false"){
+            $("#msg-alert").empty();
+            $("#msg-alert").append("权限不足，请联系管理员");
+            $("#alert").show();
+        }else {
+            $("#msg-alert").empty();
+            $("#msg-alert").append(data.msg);
+            $("#bookModal").modal("hide");
+            $("#alert").show();
+            window.location.href = data.url;
+        }
+    })
+
+});
+
+
+//修改--查询获取书籍修改信息,并赋值给对应的对象（文本框等）
+$('td a[name="edit-book"]').click(function(){
+    var book_id = $(this).attr("book_id");
+        $.ajax({
+            url: "/news/book/",
+            type: "PUT",
+            data: JSON.stringify({'book_id':book_id}),
+            success: function(data) {
+                        var info = eval('(' + data + ')');
+                        $("#edit-name").val(info.name);
+                        $("#edit-title").val(info.title);
+                        $("#edit-pub").val(info.pub);
+                        $("#sub-edit-book").attr('book_id', info.book_id);
+                        $("#edit-bookModal").modal('show');
+                    }
+
+
+    });
+});
+
+//修改-保存书籍信息
+$("#sub-edit-book").click(function(){
+    var book_id = $(this).attr('book_id');
+    var name = $("#edit-name").val();
+    var title = $("#edit-title").val();
+    var pub = $("#edit-pub").val();
+
+     $.ajax({
+            url: "/news/book/",
+            type: "PUT",
+            data: JSON.stringify({'action':'edit','name':name, 'title':title,'pub':pub,'book_id':book_id}),
+            success: function(data) {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data.msg);
+                    $("#edit-bookModal").modal("hide");
+                    $("#alert").show();
+                    window.location.href = data.url;
+
+        }
+    });
+});
+//删除书籍
+$("td a[name='del-book']").click(function(){
+   var book_id = $(this).attr('book_id');
+   var statu = confirm("是否确认删除！");
+   if (statu==true)
+    {
+         $.ajax({
+            url: "/news/book/",
+            type: "DELETE",
+            data: JSON.stringify({'book_id':book_id}),
+            success: function(data) {
+                console.log(data);
+                if(data=="perms_false"){
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append("权限不足，请联系管理员");
+                    $("#alert").show();
+            }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data);
+                    $("#alert").show();
+                }
+             }
+        });
+    }
+});
+
+
+

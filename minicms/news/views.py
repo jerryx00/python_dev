@@ -110,3 +110,73 @@ class Author(View):
         news_db.Author.objects.get(id=author_id).delete()
         data = "作者已删除,请刷新查看！"
         return HttpResponse(data)
+
+class Book(View):
+    """书籍管理"""
+    def dispatch(self, request, *args, **kwargs):
+        return super(Book,self).dispatch(request, *args, **kwargs)
+
+    def get(self,request):
+        title = '书籍管理'
+        list = news_db.Book.objects.all()
+        return render(request, 'news_book.html', locals())
+
+    def post(self, request):
+        """添加书籍"""
+        name = request.POST.get("name")
+        title = request.POST.get("title")
+        pub = request.POST.get("pub")
+
+        next_url = request.get_full_path()
+        print(next_url)
+        try:
+            # django自带用户信息表
+            obj = news_db.Book(name=name,title=title)
+            obj.save()
+            msg = "书籍 %s 添加成功,请刷新查看！" % name
+            data = {'msg':msg,'url':next_url}
+
+
+        except Exception as e:
+            msg = "书籍添加失败：\n %s " % e
+            data = {'msg': msg, 'url': next_url}
+
+        data = json.dumps(data)
+        return HttpResponse(data)
+
+    def put(self,request):
+        """修改书籍"""
+        req_info = eval(request.body.decode())
+        book_id = req_info.get("book_id")
+        name = req_info.get("name")
+        title = req_info.get("title")
+
+        action = req_info.get("action")
+
+        next_url = request.get_full_path()
+
+        if action:
+            obj = news_db.Book.objects.get(id=book_id)
+            obj.name = name
+            obj.title = title
+            obj.save()
+            msg = "书籍 %s 修改成功,请刷新查看！" % name
+            data = {'msg': msg, 'url': next_url}
+            data = json.dumps(data)
+
+        else:
+            """获取修改的书籍信息"""
+            obj = news_db.Book.objects.get(id=book_id)
+            data = json.dumps({"name":obj.name, "title":obj.title,
+                                        "author_id":obj.id})
+
+        return HttpResponse(data)
+
+
+    def delete(self,request):
+        """删除书籍"""
+        req_info = eval(request.body.decode())
+        book_id = req_info.get("book_id")
+        news_db.Book.objects.get(id=book_id).delete()
+        data = "书籍已删除,请刷新查看！"
+        return HttpResponse(data)

@@ -113,6 +113,8 @@ class Author(View):
 
 class Book(View):
     """书籍管理"""
+
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(Book,self).dispatch(request, *args, **kwargs)
 
@@ -128,18 +130,18 @@ class Book(View):
         pub = request.POST.get("pub")
 
         next_url = request.get_full_path()
-        print(next_url)
+
         try:
             # django自带用户信息表
             obj = news_db.Book(name=name,title=title)
             obj.save()
             msg = "书籍 %s 添加成功,请刷新查看！" % name
-            data = {'msg':msg,'url':next_url}
+            data = {'code':0,'msg':msg,'url':next_url}
 
 
         except Exception as e:
             msg = "书籍添加失败：\n %s " % e
-            data = {'msg': msg, 'url': next_url}
+            data = {'code':0,'msg': msg, 'url': next_url}
 
         data = json.dumps(data)
         return HttpResponse(data)
@@ -161,13 +163,13 @@ class Book(View):
             obj.title = title
             obj.save()
             msg = "书籍 %s 修改成功,请刷新查看！" % name
-            data = {'msg': msg, 'url': next_url}
+            data = {'code':0,'msg': msg, 'url': next_url}
             data = json.dumps(data)
 
         else:
             """获取修改的书籍信息"""
             obj = news_db.Book.objects.get(id=book_id)
-            data = json.dumps({"name":obj.name, "title":obj.title,
+            data = json.dumps({'code':0,"name":obj.name, "title":obj.title,
                                         "author_id":obj.id})
 
         return HttpResponse(data)
@@ -175,8 +177,11 @@ class Book(View):
 
     def delete(self,request):
         """删除书籍"""
+        next_url = request.get_full_path()
         req_info = eval(request.body.decode())
         book_id = req_info.get("book_id")
         news_db.Book.objects.get(id=book_id).delete()
-        data = "书籍已删除,请刷新查看！"
+        msg = "书籍已删除,请刷新查看！"
+        data = {'code': 0, 'msg': msg, 'url': next_url}
+        data = json.dumps(data)
         return HttpResponse(data)

@@ -16,7 +16,7 @@ $("#add-author").click(function(){
             $("#msg-alert").append(data.msg);
             $("#authorModal").modal("hide");
             $("#alert").show();
-            window.location.href = data.url;
+//            window.location.href = data.url;
         }
     })
 
@@ -57,7 +57,7 @@ $("#sub-edit-author").click(function(){
                     $("#msg-alert").append(data.msg);
                     $("#edit-authorModal").modal("hide");
                     $("#alert").show();
-                    window.location.href = data.url;
+//                    window.location.href = data.url;
 
         }
     });
@@ -92,12 +92,12 @@ $("td a[name='del-author']").click(function(){
 ////////////////////////书籍管理////////////////////////////
 //添加保存书籍
 $("#add-book").click(function(){
+
     var name = $("#add-name").val();
     var title = $("#add-title").val();
     var pub = $("#add-pub").val();
-
     $.post("/news/book/",{'name':name,'title':title,'pub':pub},function(data){
-        if(data=="perms_false"){
+        if(data.code != "0"){
             $("#msg-alert").empty();
             $("#msg-alert").append("权限不足，请联系管理员");
             $("#alert").show();
@@ -106,7 +106,7 @@ $("#add-book").click(function(){
             $("#msg-alert").append(data.msg);
             $("#bookModal").modal("hide");
             $("#alert").show();
-            window.location.href = data.url;
+//            window.location.href = data.url;
         }
     })
 
@@ -149,7 +149,7 @@ $("#sub-edit-book").click(function(){
                     $("#msg-alert").append(data.msg);
                     $("#edit-bookModal").modal("hide");
                     $("#alert").show();
-                    window.location.href = data.url;
+//                    window.location.href = data.url;
 
         }
     });
@@ -166,13 +166,13 @@ $("td a[name='del-book']").click(function(){
             data: JSON.stringify({'book_id':book_id}),
             success: function(data) {
                 console.log(data);
-                if(data=="perms_false"){
+                if(data.code !="0"){
                     $("#msg-alert").empty();
                     $("#msg-alert").append("权限不足，请联系管理员");
                     $("#alert").show();
-            }else {
+                 }else {
                     $("#msg-alert").empty();
-                    $("#msg-alert").append(data);
+                    $("#msg-alert").append(data.msg);
                     $("#alert").show();
                 }
              }

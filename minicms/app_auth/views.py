@@ -425,6 +425,7 @@ class UserMG(View):
         title = '用户管理'
         roles = auth_db.Role.objects.all()
         role_list = []
+        print('get method,用户管理查询界面')
         for role in roles:
             role_list.append({"role_title": role.role_title, "role_id": role.id})
 
@@ -467,6 +468,7 @@ class UserMG(View):
 
 
     def post(self,request):
+        print('pos method,用户管理添加保存入库处理')
         """添加用户"""
         user_name = request.POST.get("user_name")
         ready_name = request.POST.get("ready_name")
@@ -506,6 +508,7 @@ class UserMG(View):
         action = req_info.get("action")
 
         if action:
+            print('put method,用户管理修改保存入库处理')
             user_obj = auth_db.User.objects.get(id=user_id)
             user_obj.ready_name = ready_name
             user_obj.user_name = user_name
@@ -517,6 +520,7 @@ class UserMG(View):
             user_obj.save()
             data = "用户 %s 修改成功,请刷新查看！" % user_name
         else:
+            print('put method,用户管理修改查询界面')
             """获取修改的用户信息"""
             user_obj = auth_db.User.objects.get(id=user_id)
             role_obj = user_obj.role.all()
@@ -531,6 +535,7 @@ class UserMG(View):
         return HttpResponse(data)
 
     def delete(self,request):
+        print('del method,用户管理删除逻辑')
         """删除用户"""
         req_info = eval(request.body.decode())
         user_id = req_info.get("user_id")

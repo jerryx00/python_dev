@@ -99,7 +99,7 @@ $("#add-book").click(function(){
     $.post("/news/book/",{'name':name,'title':title,'pub':pub},function(data){
         if(data.code != "0"){
             $("#msg-alert").empty();
-            $("#msg-alert").append("权限不足，请联系管理员");
+            $("#msg-alert").append("处理错误，请联系管理员");
             $("#alert").show();
         }else {
             $("#msg-alert").empty();

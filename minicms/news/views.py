@@ -120,6 +120,12 @@ class Book(View):
 
     def get(self,request):
         title = '书籍管理'
+        pubs = news_db.Publisher.objects.all()
+        pub_list = []
+        print('get method,书籍管理查询界面')
+        for pub in pubs:
+            pub_list.append({"pub_name": pub.name, "pub_id": pub.id})
+
         list = news_db.Book.objects.all()
         return render(request, 'news_book.html', locals())
 
@@ -127,23 +133,25 @@ class Book(View):
         """添加书籍"""
         name = request.POST.get("name")
         title = request.POST.get("title")
-        pub = request.POST.get("pub")
+        pub_id = request.POST.get("pub_id")
 
         next_url = request.get_full_path()
 
         try:
             # django自带用户信息表
-            obj = news_db.Book(name=name,title=title)
+            obj = news_db.Book(name=name,title=title, pub_id=pub_id)
             obj.save()
+
             msg = "书籍 %s 添加成功,请刷新查看！" % name
             data = {'code':0,'msg':msg,'url':next_url}
 
 
         except Exception as e:
             msg = "书籍添加失败：\n %s " % e
-            data = {'code':0,'msg': msg, 'url': next_url}
+            data = {'code':1,'msg': msg, 'url': next_url}
 
         data = json.dumps(data)
+        print(data)
         return HttpResponse(data)
 
     def put(self,request):

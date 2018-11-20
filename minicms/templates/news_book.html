@@ -100,7 +100,11 @@
 
           <div class="form-group">
             <label >出版社</label>
-            <input type="pub" class="form-control"  placeholder="出版社" id="add-pub">
+             <select  class="form-control"  id="add-pub">
+                {% for pub in pub_list %}
+              <option value="{{ pub.pub_id }}">{{ pub.pub_name }}</option>
+                {% endfor %}
+            </select>
           </div>
       </div>
 
@@ -134,7 +138,11 @@
           </div>
              <div class="form-group">
             <label >出版社</label>
-            <input type="pub" class="form-control"  placeholder="出版社" id="edit-pub">
+            <select  class="form-control"  id="edit-pub">
+                {% for pub in pub_list %}
+              <option value="{{ pub.pub_id }}">{{ pub.pub_name }}</option>
+                {% endfor %}
+            </select>
           </div>
       </div>
       <div class="modal-footer">

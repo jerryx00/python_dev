@@ -126,7 +126,8 @@ class Book(View):
         for pub in pubs:
             pub_list.append({"pub_name": pub.name, "pub_id": pub.id})
 
-        list = news_db.Book.objects.all()
+        # 关联查询
+        # blist = Book.objects.filter(id>0).values('publisher__name')
         return render(request, 'news_book.html', locals())
 
     def post(self, request):

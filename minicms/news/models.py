@@ -151,6 +151,18 @@ class Waiter(models.Model):
 
 
 #==========================
+class Province(models.Model):
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=10)
+    def __str__(self):
+        return self.name
+
+class City(models.Model):
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=5)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 #部门表
 class Department(models.Model):
@@ -172,9 +184,12 @@ class Person(models.Model):
     shirt_size = models.CharField(max_length=1, choices=SHIRT_SIZES)
     # 在当前表中创建了一个字段 restaurant_id 关联 Restaurant 表,特性：外键、非空
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    visitation = models.ManyToManyField(City, related_name="visitor")
+    hometown = models.ForeignKey(City, related_name="birth", on_delete=models.CASCADE, null=True)
+    living = models.ForeignKey(City, related_name="citizen", on_delete=models.CASCADE, null=True)
+
     def __str__(self):              # __unicode__ on Python 2
         return "name:%s " % (self.name)
-
 
 #一对一
 class Account(models.Model):

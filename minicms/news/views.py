@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding:utf-8
 from django.shortcuts import render
-from news.models import Userinfo
+from news.models import Userinfo, Person as PersonModel,Book as BookModel,Author,Publisher,Department,Restaurant,Waiter
 from pprint import pprint
 from django.http import HttpResponse
 import datetime
@@ -111,6 +111,7 @@ class Author(View):
         data = "作者已删除,请刷新查看！"
         return HttpResponse(data)
 
+
 class Book(View):
     """书籍管理"""
 
@@ -122,12 +123,18 @@ class Book(View):
         title = '书籍管理'
         pubs = news_db.Publisher.objects.all()
         pub_list = []
-        print('get method,书籍管理查询界面')
-        for pub in pubs:
-            pub_list.append({"pub_name": pub.name, "pub_id": pub.id})
+        # print('get method,书籍管理查询界面')
+        # for pub in pubs:
+        #     pub_list.append({"pub_name": pub.name, "pub_id": pub.id})
 
         # 关联查询
         # blist = Book.objects.filter(id>0).values('publisher__name')
+        book = BookModel.objects.select_related('pub__publisher').get(pk=1)
+        # print(book)
+        zhangs = PersonModel.objects.select_related('living__province').get(name=u"张")
+        print(zhangs.living.province)
+
+
         return render(request, 'news_book.html', locals())
 
     def post(self, request):
@@ -195,3 +202,7 @@ class Book(View):
         data = {'code': 0, 'msg': msg, 'url': next_url}
         data = json.dumps(data)
         return HttpResponse(data)
+
+
+class Person(View):
+    pass

@@ -95,8 +95,8 @@ $("#add-book").click(function(){
 
     var name = $("#add-name").val();
     var title = $("#add-title").val();
-    var pub = $("#add-pub").val();
-    $.post("/news/book/",{'name':name,'title':title,'pub':pub},function(data){
+    var pub_id = $("#add-pub").val();
+    $.post("/news/book/",{'name':name,'title':title,'pub_id':pub_id},function(data){
         if(data.code != "0"){
             $("#msg-alert").empty();
             $("#msg-alert").append("处理错误，请联系管理员");
@@ -138,12 +138,12 @@ $("#sub-edit-book").click(function(){
     var book_id = $(this).attr('book_id');
     var name = $("#edit-name").val();
     var title = $("#edit-title").val();
-    var pub = $("#edit-pub").val();
+    var pub_id = $("#edit-pub").val();
 
      $.ajax({
             url: "/news/book/",
             type: "PUT",
-            data: JSON.stringify({'action':'edit','name':name, 'title':title,'pub':pub,'book_id':book_id}),
+            data: JSON.stringify({'action':'edit','name':name, 'title':title,'pub_id':pub_id,'book_id':book_id}),
             success: function(data) {
                     $("#msg-alert").empty();
                     $("#msg-alert").append(data.msg);

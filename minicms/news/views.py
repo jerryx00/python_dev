@@ -140,6 +140,7 @@ class Book(View):
         try:
             # django自带用户信息表
             obj = news_db.Book(name=name,title=title, pub_id=pub_id)
+            # print(pub_id)
             obj.save()
 
             msg = "书籍 %s 添加成功,请刷新查看！" % name

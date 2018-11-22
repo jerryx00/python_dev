@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding:utf-8
 from django.shortcuts import render
-from news.models import Userinfo, Person as PersonModel,Book as BookModel,Author,Publisher,Department,Restaurant,Waiter
+from news.models import Userinfo, Person,Book,Author,Publisher,Department,Restaurant,Waiter
 from pprint import pprint
 from django.http import HttpResponse
 import datetime
@@ -18,6 +18,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
+from django.db import connection
 
 def index(request):
     # return HttpResponse(u"welcome!")
@@ -129,10 +130,15 @@ class Book(View):
 
         # 关联查询
         # blist = Book.objects.filter(id>0).values('publisher__name')
-        book = BookModel.objects.select_related('pub__publisher').get(pk=1)
-        # print(book)
-        zhangs = PersonModel.objects.select_related('living__province').get(name=u"张")
-        print(zhangs.living.province)
+
+        book_all = news_db.Book.objects.select_related('pub')
+        book_list = news_db.Book.objects.select_related('pub').values('id','name','title','pub__name')
+        print(connection.queries)
+        book_1 = news_db.Book.objects.select_related('pub').filter(pk=1)
+        print(connection.queries)
+
+        # zhangs = PersonModel.objects.select_related('living__province').get(name=u"张")
+        # print(zhangs.living.province)
 
 
         return render(request, 'news_book.html', locals())

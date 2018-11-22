@@ -39,20 +39,22 @@
       <table class="table table-hover table-bordered">
           <thead>
             <tr style="background-color: #f5f5f5;">
+              <th>序号</th>
               <th>名称</th>
               <th>标题</th>
               <th>出版社</th>
-              <th>书籍</th>
+
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
             {% for i in book_list %}
           <tr name="tbody">
+              <td style="padding-top: 20px;">{{ forloop.counter }}</td>
               <td style="padding-top: 20px;">{{ i.name }}</td>
                <td style="padding-top: 20px;">{{ i.title }}</td>
-              <td style="padding-top: 20px;">{{ i.pub }}</td>
-              <td style="padding-top: 20px;">{{ i.book }}</td>
+              <td style="padding-top: 20px;">{{ i.pub_name }}</td>
+
               <td style="padding-top: 20px;">
                   <a href="javascript:;" name="edit-book" book_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="修改"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
                   <a href="javascript:;" name="del-book"  book_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>

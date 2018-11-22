@@ -24,4 +24,5 @@ urlpatterns = [
     path('user_index/', views.user_index, name='user_index'),  #
     path('author/', views.Author.as_view()),
     path('book/', views.Book.as_view()),
+    path('person/', views.Person.as_view()),
 ]

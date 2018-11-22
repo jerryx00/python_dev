@@ -132,7 +132,10 @@ class Book(View):
         # blist = Book.objects.filter(id>0).values('publisher__name')
 
         book_all = news_db.Book.objects.select_related('pub')
+        print(connection.queries)
         book_list = news_db.Book.objects.select_related('pub').values('id','name','title','pub__name')
+        print(connection.queries)
+        book_list_pre = news_db.Book.objects.prefetch_related('pub').values('id','name','title','pub__name')
         print(connection.queries)
         book_1 = news_db.Book.objects.select_related('pub').filter(pk=1)
         print(connection.queries)
@@ -211,4 +214,24 @@ class Book(View):
 
 
 class Person(View):
-    pass
+    """人员管理"""
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Person, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        title = '人员管理'
+        person = news_db.Person.objects.all()
+        person_list = []
+
+        # 查询出所有字段
+        person_all = news_db.Person.objects.select_related('hometown','living','department')
+        #查询id,name字段的wfhg
+        person_all_v_all = news_db.Person.objects.select_related('hometown','living','department').values('id','name')
+        #条件查询 name-'cx'
+        person_all_v_cx = news_db.Person.objects.select_related('hometown','living','department').values('id','name').get(name='cx')
+        # 查询三张表的数据，并将三张表的关键字段查询出来
+        person_list = news_db.Person.objects.select_related('hometown','living','visitation','department').values('id','name','hometown__name','living__name','visitation__name','department__name')
+
+        return render(request, 'news_person.html', locals())

@@ -53,10 +53,10 @@
           <tr name="tbody">
               <td style="padding-top: 20px;">{{ forloop.counter }}</td>
               <td style="padding-top: 20px;">{{ i.name }}</td>
-              <td style="padding-top: 20px;">{{ i.department_name }}</td>
-               <td style="padding-top: 20px;">{{ i.living_name}}</td>
-              <td style="padding-top: 20px;">{{ i.visitation_name }}</td>
-              <td style="padding-top: 20px;">{{ i.department_name }}</td>
+              <td style="padding-top: 20px;">{{ i.hometown__name }}</td>
+               <td style="padding-top: 20px;">{{ i.living__name}}</td>
+              <td style="padding-top: 20px;">{{ i.visitation__name }}</td>
+              <td style="padding-top: 20px;">{{ i.department__name }}</td>
               <td style="padding-top: 20px;">
                   <a href="javascript:;" name="edit-author" author_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="修改"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
                   <a href="javascript:;" name="del-author"  author_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>

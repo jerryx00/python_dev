@@ -233,5 +233,5 @@ class Person(View):
         person_all_v_cx = news_db.Person.objects.select_related('hometown','living','department').values('id','name').get(name='cx')
         # 查询三张表的数据，并将三张表的关键字段查询出来
         person_list = news_db.Person.objects.select_related('hometown','living','visitation','department').values('id','name','hometown__name','living__name','visitation__name','department__name')
-
+        print(person_list)
         return render(request, 'news_person.html', locals())

@@ -25,4 +25,5 @@ urlpatterns = [
     path('author/', views.Author.as_view()),
     path('book/', views.Book.as_view()),
     path('person/', views.Person.as_view()),
+    path('department/', views.Department.as_view()),
 ]

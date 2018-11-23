@@ -48,7 +48,10 @@ class Author(View):
 
     def get(self,request):
         title = '作家管理'
-        author_list = news_db.Author.objects.all()
+        author_list_1 = news_db.Author.objects.all()
+        # 查询 id>0记录
+        author_list_2 = news_db.Author.objects.all().filter(id__gt=0)
+        author_list = news_db.Author.objects.all().values('id','name','first_name','last_name','mobile','email').filter(id__gt=0)
         return render(request, 'news_author.html', locals())
 
     def post(self, request):
@@ -235,3 +238,26 @@ class Person(View):
         person_list = news_db.Person.objects.select_related('hometown','living','visitation','department').values('id','name','hometown__name','living__name','visitation__name','department__name')
         print(person_list)
         return render(request, 'news_person.html', locals())
+
+class Department(View):
+    """部门管理"""
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Department, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        title = '部门管理'
+        department = news_db.Department.objects.all().values('id','code','name')
+        # 获取id大于0的值
+        department_list_0 = news_db.Department.objects.values('id', 'code','name').filter(id__gt=0)
+
+
+        department_list = []
+        # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法
+        id = 0
+        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s', [id])
+        print(department_list)
+        # for d in department_list:
+            # print(d)
+        return render(request, 'news_department.html', locals())

@@ -255,8 +255,12 @@ class Department(View):
 
         department_list = []
         # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法
-        id = 0
-        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s', [id])
+        minid = 0
+        maxid = 100000
+        # 单参数
+        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s and id<=%s', [minid])
+        # 多参数
+        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s and id<=%s', [minid, maxid])
         print(department_list)
         # for d in department_list:
             # print(d)

@@ -248,20 +248,31 @@ class Department(View):
 
     def get(self, request):
         title = '部门管理'
-        department = news_db.Department.objects.all().values('id','code','name')
-        # 获取id大于0的值
-        department_list_0 = news_db.Department.objects.values('id', 'code','name').filter(id__gt=0)
 
+        action = request.GET.get("action", '')
 
-        department_list = []
-        # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法
-        minid = 0
-        maxid = 100000
-        # 单参数
-        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s and id<=%s', [minid])
-        # 多参数
-        department_list = news_db.Department.objects.raw('select id,code,name from news_department where id>= %s and id<=%s', [minid, maxid])
-        print(department_list)
-        # for d in department_list:
-            # print(d)
-        return render(request, 'news_department.html', locals())
+        next_url = request.get_full_path()
+
+        if action == 'add':
+            return render(request, 'news_department.html', locals())
+        elif action == 'edit':
+            return render(request, 'news_department.html', locals())
+        else:
+            department = news_db.Department.objects.all().values('id', 'code', 'name')
+            # 获取id大于0的值
+            department_list_0 = news_db.Department.objects.values('id', 'code', 'name').filter(id__gt=0)
+
+            department_list = []
+            # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法
+            minid = 0
+            maxid = 100000
+            # 单参数
+            department_list = news_db.Department.objects.raw(
+                'select id,code,name from news_department where id>= %s and id<=%s', [minid])
+            # 多参数
+            department_list = news_db.Department.objects.raw(
+                'select id,code,name from news_department where id>= %s and id<=%s', [minid, maxid])
+            print(department_list)
+
+            # index界面
+            return render(request, 'news_department.html', locals())

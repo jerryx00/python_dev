@@ -29,11 +29,10 @@ $('td a[name="edit-author"]').click(function(){
             type: "PUT",
             data: JSON.stringify({'author_id':author_id}),
             success: function(data) {
-                        var info = eval('(' + data + ')');
-                        $("#edit-name").val(info.name);
-                        $("#edit-mobile").val(info.mobile);
-                        $("#edit-email").val(info.email);
-                        $("#sub-edit-author").attr('author_id', info.author_id);
+                        $("#edit-name").val(data.name);
+                        $("#edit-mobile").val(data.mobile);
+                        $("#edit-email").val(data.email);
+                        $("#sub-edit-author").attr('author_id', data.author_id);
                         $("#edit-authorModal").modal('show');
                     }
 
@@ -74,13 +73,13 @@ $("td a[name='del-author']").click(function(){
             data: JSON.stringify({'author_id':author_id}),
             success: function(data) {
                 console.log(data);
-                if(data=="perms_false"){
+                if(data.code != 0){
                     $("#msg-alert").empty();
                     $("#msg-alert").append("权限不足，请联系管理员");
                     $("#alert").show();
             }else {
                     $("#msg-alert").empty();
-                    $("#msg-alert").append(data);
+                    $("#msg-alert").append(data.msg);
                     $("#alert").show();
                 }
              }
@@ -97,9 +96,10 @@ $("#add-book").click(function(){
     var title = $("#add-title").val();
     var pub_id = $("#add-pub").val();
     $.post("/news/book/",{'name':name,'title':title,'pub_id':pub_id},function(data){
-        if(data.code != "0"){
+        console.log(data);
+        if(data.code != 0){
             $("#msg-alert").empty();
-            $("#msg-alert").append("处理错误，请联系管理员");
+            $("#msg-alert").append("处理错误，请联系管理员! "+data.code );
             $("#alert").show();
         }else {
             $("#msg-alert").empty();
@@ -166,7 +166,7 @@ $("td a[name='del-book']").click(function(){
             data: JSON.stringify({'book_id':book_id}),
             success: function(data) {
                 console.log(data);
-                if(data.code !="0"){
+                if(data.code !=0){
                     $("#msg-alert").empty();
                     $("#msg-alert").append("权限不足，请联系管理员");
                     $("#alert").show();

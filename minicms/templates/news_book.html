@@ -104,7 +104,7 @@
             <label >出版社</label>
              <select  class="form-control"  id="add-pub">
                 {% for pub in pub_list %}
-              <option value="{{ pub.pub_id }}">{{ pub.pub_name }}</option>
+              <option value="{{ pub.id }}">{{ pub.name }}</option>
                 {% endfor %}
             </select>
           </div>

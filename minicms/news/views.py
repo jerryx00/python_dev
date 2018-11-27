@@ -204,9 +204,9 @@ class Book(View):
             pub_obj = book_obj.pub
             pub_info = []
             pub_info.append({"pub_name": pub_obj.name, "pub_id": pub_obj.id})
-
             data = {"name": book_obj.name, "title": book_obj.title, "pub_info": pub_info, "book_id": book_obj.id}
-            # obj_book = news_db.Book.objects.select_related('pub').values('id','name','title','pub__id','pub__name').filter(id=book_id)
+
+            obj_book = news_db.Book.objects.select_related('pub').values('id','name','title','pub__id','pub__name').filter(id=book_id)
             # data_book = {"code":0,"name":obj_book.name, "title":obj_book.title,"book_id":obj_book.id,"pub_id":obj_book.pub__id,"pub_name":obj_book.pub__name}
 
         info_json = json.dumps(data)

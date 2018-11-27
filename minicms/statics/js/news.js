@@ -127,6 +127,7 @@ $('td a[name="edit-book"]').click(function(){
                         for (i = 0; i < pub_info.length; i++) {
                             $("#edit-pub").val(pub_info[0].pub_id);
                         }
+                        $("#sub-edit-book").attr('book_id', data.book_id);
                         $("#edit-bookModal").modal('show');
                     }
 
@@ -165,6 +166,97 @@ $("td a[name='del-book']").click(function(){
             url: "/news/book/",
             type: "DELETE",
             data: JSON.stringify({'book_id':book_id}),
+            success: function(data) {
+                console.log(data);
+                if(data.code !=0){
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append("权限不足，请联系管理员");
+                    $("#alert").show();
+                 }else {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data.msg);
+                    $("#alert").show();
+                }
+             }
+        });
+    }
+});
+
+
+
+////////////////////////部门管理////////////////////////////
+//添加保存部门
+$("#add-department").click(function(){
+
+    var name = $("#add-name").val();
+    var code = $("#add-code").val();
+    $.post("/news/department/",{'name':name,'code':code},function(data){
+        console.log(data);
+        if(data.code != 0){
+            $("#msg-alert").empty();
+            $("#msg-alert").append("处理错误，请联系管理员! "+data.code );
+            $("#alert").show();
+        }else {
+            $("#msg-alert").empty();
+            $("#msg-alert").append(data.msg);
+            $("#departmentModal").modal("hide");
+            $("#alert").show();
+//            window.location.href = data.url;
+        }
+    })
+
+});
+
+
+//修改--查询获取部门修改信息,并赋值给对应的对象（文本框等）
+$('td a[name="edit-department"]').click(function(){
+    var department_id = $(this).attr("department_id");
+        $.ajax({
+            url: "/news/department/",
+            type: "PUT",
+            data: JSON.stringify({'department_id':department_id}),
+            success: function(data) {
+                        $("#edit-name").val(data.name);
+                        $("#edit-code").val(data.code);
+
+                        $("#sub-edit-department").attr('department_id', data.department_id);
+                        $("#edit-departmentModal").modal('show');
+                    }
+
+
+    });
+});
+
+//修改-保存部门信息
+$("#sub-edit-department").click(function(){
+    var department_id = $(this).attr('department_id');
+    var name = $("#edit-name").val();
+    var code = $("#edit-code").val();
+
+     $.ajax({
+            url: "/news/department/",
+            type: "PUT",
+            data: JSON.stringify({'action':'edit','name':name, 'code':code,'department_id':department_id}),
+            success: function(data) {
+                    $("#msg-alert").empty();
+                    $("#msg-alert").append(data.msg);
+                    $("#edit-departmentModal").modal("hide");
+                    $("#alert").show();
+//                    window.location.href = data.url;
+
+        }
+    });
+});
+//删除部门
+$("td a[name='del-department']").click(function(){
+   var department_id = $(this).attr('department_id');
+   var statu = confirm("是否确认删除！");
+   if (statu==true)
+    {
+         $.ajax({
+            url: "/news/department/",
+            type: "DELETE",
+            data: JSON.stringify({'department_id':department_id}),
             success: function(data) {
                 console.log(data);
                 if(data.code !=0){

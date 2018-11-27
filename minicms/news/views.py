@@ -183,16 +183,18 @@ class Book(View):
         book_id = req_info.get("book_id")
         name = req_info.get("name")
         title = req_info.get("title")
+        pub_id = req_info.get("pub_id")
 
         action = req_info.get("action")
 
         next_url = request.get_full_path()
 
         if action:
-            obj = news_db.Book.objects.get(id=book_id)
-            obj.name = name
-            obj.title = title
-            obj.save()
+            book_obj = news_db.Book.objects.get(id=book_id)
+            book_obj.name = name
+            book_obj.title = title
+            book_obj.pub_id = pub_id
+            book_obj.save()
             msg = "书籍 %s 修改成功,请刷新查看！" % name
             data = {'code':0,'msg': msg, 'url': next_url}
 
@@ -280,7 +282,7 @@ class Department(View):
         else:
             department = news_db.Department.objects.all().values('id', 'code', 'name')
             # 获取id大于0的值
-            department_list_0 = news_db.Department.objects.values('id', 'code', 'name')
+            department_list_0 = news_db.Department.objects.values('id', 'code', 'name').filter(id__gt=0).order_by('-id')
 
             department_list = []
             # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法
@@ -296,3 +298,66 @@ class Department(View):
 
             # index界面
             return render(request, 'news_department.html', locals())
+
+    def post(self, request):
+        """添加部门"""
+        code = request.POST.get("code")
+        name = request.POST.get("name")
+        next_url = request.get_full_path()
+
+        try:
+            # django自带用户信息表
+            obj = news_db.Book(name=name, code=code)
+            # print(pub_id)
+            obj.save()
+
+            msg = "部门 %s 添加成功,请刷新查看！" % name
+            data = {'code': 0, 'msg': msg, 'url': next_url}
+
+
+        except Exception as e:
+            msg = "部门添加失败：\n %s " % e
+            data = {'code': 1, 'msg': msg, 'url': next_url}
+
+        info_json = json.dumps(data)
+        return HttpResponse(info_json, content_type="application/json")
+
+    def put(self, request):
+        """修改部门"""
+        req_info = eval(request.body.decode())
+        department_id = req_info.get("department_id")
+        name = req_info.get("name")
+        code = req_info.get("code")
+
+        action = req_info.get("action")
+
+        next_url = request.get_full_path()
+
+        if action:
+            department_obj = news_db.Book.objects.get(id=department_id)
+            department_obj.name = name
+            department_obj.title = code
+            department_obj.save()
+            msg = "部门 %s 修改成功,请刷新查看！" % name
+            data = {'code': 0, 'msg': msg, 'url': next_url}
+
+
+        else:
+            """获取修改的部门信息"""
+            department_obj = news_db.Book.objects.get(id=department_id)
+
+            data = {"name": department_obj.name, "code": department_obj.code, "department_id": department_obj.id}
+
+        info_json = json.dumps(data)
+        return HttpResponse(info_json, content_type="application/json")
+
+    def delete(self, request):
+        """删除部门"""
+        next_url = request.get_full_path()
+        req_info = eval(request.body.decode())
+        department_id = req_info.get("department_id")
+        ret = news_db.Department.objects.get(id=department_id).delete()
+        msg = "部门已删除,请刷新查看！"
+        data = {'code': 0, 'msg': msg, 'url': next_url}
+        info_json = json.dumps(data)
+        return HttpResponse(info_json, content_type="application/json")

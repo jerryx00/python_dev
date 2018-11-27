@@ -24,7 +24,7 @@
 
 
 
-<!--用户信息-->
+<!--书籍信息-->
 <div class="panel panel-default center-top" style="min-width:1300px;">
   <div class="panel-heading">
       <div class="row" style="padding-top:5px;padding-left:10px;">
@@ -80,7 +80,7 @@
 <!-- Modal -->
 {% block modal %}
 
-<!--添加用户-->
+<!--添加书籍-->
 <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="margin-top:135px;">
@@ -119,7 +119,7 @@
 </div>
 
 
-<!--修改用户信息-->
+<!--修改书籍信息-->
 <div class="modal fade" id="edit-bookModal" tabindex="-1" role="dialog" aria-labelledby="edit-bookModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="margin-top:135px;">
@@ -142,7 +142,7 @@
             <label >出版社</label>
             <select  class="form-control"  id="edit-pub">
                 {% for pub in pub_list %}
-              <option value="{{ pub.pub_id }}">{{ pub.pub_name }}</option>
+              <option value="{{ pub.id }}">{{ pub.name }}</option>
                 {% endfor %}
             </select>
           </div>

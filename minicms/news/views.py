@@ -199,8 +199,15 @@ class Book(View):
 
         else:
             """获取修改的书籍信息"""
-            obj = news_db.Book.objects.get(id=book_id)
-            data = {'code':0,"name":obj.name, "title":obj.title,"author_id":obj.id,"pub_id":obj.pub}
+            book_obj = news_db.Book.objects.get(id=book_id)
+
+            pub_obj = book_obj.pub
+            pub_info = []
+            pub_info.append({"pub_name": pub_obj.name, "pub_id": pub_obj.id})
+
+            data = {"name": book_obj.name, "title": book_obj.title, "pub_info": pub_info, "book_id": book_obj.id}
+            # obj_book = news_db.Book.objects.select_related('pub').values('id','name','title','pub__id','pub__name').filter(id=book_id)
+            # data_book = {"code":0,"name":obj_book.name, "title":obj_book.title,"book_id":obj_book.id,"pub_id":obj_book.pub__id,"pub_name":obj_book.pub__name}
 
         info_json = json.dumps(data)
         return HttpResponse(info_json, content_type="application/json")
@@ -273,7 +280,7 @@ class Department(View):
         else:
             department = news_db.Department.objects.all().values('id', 'code', 'name')
             # 获取id大于0的值
-            department_list_0 = news_db.Department.objects.values('id', 'code', 'name').filter(id__gt=0)
+            department_list_0 = news_db.Department.objects.values('id', 'code', 'name')
 
             department_list = []
             # params 是一个参数列表。在查询字符串中你要使用 %s占位符（不管你用何种数据库引擎）,以下是标准写法

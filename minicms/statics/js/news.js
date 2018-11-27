@@ -121,11 +121,12 @@ $('td a[name="edit-book"]').click(function(){
             type: "PUT",
             data: JSON.stringify({'book_id':book_id}),
             success: function(data) {
-                        var info = eval('(' + data + ')');
-                        $("#edit-name").val(info.name);
-                        $("#edit-title").val(info.title);
-                        $("#edit-pub").val(info.pub);
-                        $("#sub-edit-book").attr('book_id', info.book_id);
+                        $("#edit-name").val(data.name);
+                        $("#edit-title").val(data.title);
+                        var pub_info = data.pub_info;
+                        for (i = 0; i < pub_info.length; i++) {
+                            $("#edit-pub").val(pub_info[0].pub_id);
+                        }
                         $("#edit-bookModal").modal('show');
                     }
 

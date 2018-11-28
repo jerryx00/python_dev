@@ -238,7 +238,13 @@ class Person(View):
         title = '人员管理'
         person = news_db.Person.objects.all()
         person_list = []
+        # 添加界面用=============================
+        city_list = news_db.City.objects.all()
+        province_list = news_db.Province.objects.all()
+        hometown_list = living_list = visitation_list = city_list
+        department_list = news_db.Department.objects.values('id', 'code', 'name').filter(id__gt=0)
 
+        # 首页界面用
         # 查询出所有字段
         person_all = news_db.Person.objects.select_related('hometown','living','department')
         #查询id,name字段的wfhg
@@ -249,6 +255,33 @@ class Person(View):
         person_list = news_db.Person.objects.select_related('hometown','living','visitation','department').values('id','name','hometown__name','living__name','visitation__name','department__name')
         print(person_list)
         return render(request, 'news_person.html', locals())
+
+    def post(self, request):
+        """添加人员"""
+        name = request.POST.get("name")
+        hometown_id = request.POST.get("hometown_id")
+        living_id = request.POST.get("living_id")
+        visitation_id = request.POST.get("visitation_id")
+        department_id = request.POST.get("department_id")
+
+        next_url = request.get_full_path()
+
+        try:
+            # django自带用户信息表
+            obj = news_db.Book(name=name,hometown_id = hometown_id,living_id = living_id,visitation_id = visitation_id, department_id = department_id)
+            # print(pub_id)
+            obj.save()
+
+            msg = "人员 %s 添加成功,请刷新查看！" % name
+            data = {'code':0,'msg':msg,'url':next_url}
+
+
+        except Exception as e:
+            msg = "书籍添加失败：\n %s " % e
+            data = {'code':1,'msg': msg, 'url': next_url}
+
+        info_json = json.dumps(data)
+        return HttpResponse(info_json, content_type="application/json")
 
     def delete(self,request):
         """书籍删除"""
@@ -307,7 +340,7 @@ class Department(View):
 
         try:
             # django自带用户信息表
-            obj = news_db.Book(name=name, code=code)
+            obj = news_db.Department(name=name, code=code)
             # print(pub_id)
             obj.save()
 
@@ -334,9 +367,9 @@ class Department(View):
         next_url = request.get_full_path()
 
         if action:
-            department_obj = news_db.Book.objects.get(id=department_id)
+            department_obj = news_db.Department.objects.get(id=department_id)
             department_obj.name = name
-            department_obj.title = code
+            department_obj.code = code
             department_obj.save()
             msg = "部门 %s 修改成功,请刷新查看！" % name
             data = {'code': 0, 'msg': msg, 'url': next_url}
@@ -344,7 +377,7 @@ class Department(View):
 
         else:
             """获取修改的部门信息"""
-            department_obj = news_db.Book.objects.get(id=department_id)
+            department_obj = news_db.Department.objects.get(id=department_id)
 
             data = {"name": department_obj.name, "code": department_obj.code, "department_id": department_obj.id}
 

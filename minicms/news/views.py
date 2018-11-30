@@ -268,7 +268,7 @@ class Person(View):
 
         try:
             # django自带用户信息表
-            obj = news_db.Book(name=name,hometown_id = hometown_id,living_id = living_id,visitation_id = visitation_id, department_id = department_id)
+            obj = news_db.Person(name=name,hometown_id = hometown_id,living_id = living_id, department_id = department_id)
             # print(pub_id)
             obj.save()
 
@@ -277,14 +277,73 @@ class Person(View):
 
 
         except Exception as e:
-            msg = "书籍添加失败：\n %s " % e
+            msg = "人员添加失败：\n %s " % e
             data = {'code':1,'msg': msg, 'url': next_url}
 
         info_json = json.dumps(data)
         return HttpResponse(info_json, content_type="application/json")
 
+    def put(self, request):
+        """修改人员"""
+        req_info = eval(request.body.decode())
+        name = req_info.get("name")
+        person_id = req_info.get("person_id")
+        hometown_id = req_info.get("hometown_id")
+        visitation_id = req_info.get("visitation_id")
+        living_id = req_info.get("living_id")
+        department_id = req_info.get("department_id")
+
+
+        action = req_info.get("action")
+
+        next_url = request.get_full_path()
+
+        if action:
+            person_obj = news_db.Person.objects.get(id=person_id)
+            person_obj.name = name
+            person_obj.hometown_id = hometown_id
+            person_obj.visitation_id = visitation_id
+            person_obj.living_id = living_id
+            person_obj.department_id = department_id
+
+            person_obj.save()
+            msg = "人员 %s 修改成功,请刷新查看！" % name
+            data = {'code': 0, 'msg': msg, 'url': next_url}
+
+
+        else:
+            """获取修改的人员信息"""
+            person_obj = news_db.Person.objects.get(id=person_id)
+
+            hometown_obj = person_obj.hometown
+            hometown_info = []
+            hometown_info.append({"name": hometown_obj.name, "id": hometown_obj.id})
+
+            # visitation_obj = person_obj.visitation
+            # visitation_info = []
+            # visitation_info.append({"name": visitation_obj.name, "id": visitation_obj.id})
+
+            living_obj = person_obj.living
+            living_info = []
+            living_info.append({"name": living_obj.name, "id": living_obj.id})
+
+            department_obj = person_obj.department
+            department_info = []
+            department_info.append({"name": department_obj.name, "id":department_obj.id})
+
+            selected_info = [];
+            selected_info.append({hometown_obj.id,  living_obj.id, department_obj})
+
+            data = {"name": person_obj.name, "hometown_info": hometown_info,
+                    "living_info": living_info, "department_info": department_info, "person_id": person_id}
+
+            # data_book = {"code":0,"name":obj_book.name, "title":obj_book.title,"book_id":obj_book.id,"pub_id":obj_book.pub__id,"pub_name":obj_book.pub__name}
+
+        info_json = json.dumps(data)
+        return HttpResponse(info_json, content_type="application/json")
+
     def delete(self,request):
-        """书籍删除"""
+        """人员删除"""
         next_url = request.get_full_path()
         req_info = eval(request.body.decode())
         person_id = req_info.get("person_id")

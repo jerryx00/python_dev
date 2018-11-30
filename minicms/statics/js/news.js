@@ -317,7 +317,14 @@ $('td a[name="edit-person"]').click(function(){
             data: JSON.stringify({'person_id':person_id}),
             success: function(data) {
                         $("#edit-name").val(data.name);
-                        $("#edit-code").val(data.code);
+//                         for (i = 0; i < pub_info.length; i++) {
+//                            $("#edit-pub").val(pub_info[0].pub_id);
+//                        }
+                        selected_info = data.selected_info;
+                        $("#edit-hometown").val(selected_info[0].id);
+                        $("#edit-visitation").val(selected_info[1].id);
+                        $("#edit-living").val(selected_info[2].id);
+                        $("#edit-department").val(selected_info[3].id);
 
                         $("#sub-edit-person").attr('person_id', data.person_id);
                         $("#edit-personModal").modal('show');

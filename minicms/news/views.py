@@ -268,9 +268,14 @@ class Person(View):
 
         try:
             # django自带用户信息表
-            obj = news_db.Person(name=name,hometown_id = hometown_id,living_id = living_id, department_id = department_id)
+            person_obj = news_db.Person(name=name,hometown_id = hometown_id,living_id = living_id, department_id = department_id)
             # print(pub_id)
-            obj.save()
+            person_obj.save()
+
+            visitation_obj = news_db.City.objects.get(id=1)
+            visitation_obj_2 = news_db.City.objects.get(id=2)
+            person_obj.visitation.clear()
+            person_obj.visitation.add(visitation_obj, visitation_obj_2)
 
             msg = "人员 %s 添加成功,请刷新查看！" % name
             data = {'code':0,'msg':msg,'url':next_url}
@@ -305,8 +310,14 @@ class Person(View):
             person_obj.visitation_id = visitation_id
             person_obj.living_id = living_id
             person_obj.department_id = department_id
-
             person_obj.save()
+
+            visitation_obj = news_db.City.objects.get(id=1)
+            visitation_obj_2 = news_db.City.objects.get(id=2)
+            person_obj.visitation.clear()
+            person_obj.visitation.add(visitation_obj, visitation_obj_2)
+
+
             msg = "人员 %s 修改成功,请刷新查看！" % name
             data = {'code': 0, 'msg': msg, 'url': next_url}
 

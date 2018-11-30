@@ -261,12 +261,14 @@ def get_role_menu(request):
     role_id = request.POST.get("role_id")
     role_obj = auth_db.Role.objects.get(id=role_id)
 
+    # 根据角色获取菜单列表
     menu_list = role_obj.menu.all()
     menu_num_list = []
 
     for i in menu_list:
         menu_num_list.append(i.menu_num)
 
+    #获取全部菜单列表
     menu_obj = auth_db.Menus.objects.all()
 
     nodes = []

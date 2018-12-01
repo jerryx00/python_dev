@@ -145,6 +145,8 @@ class Book(View):
         book_1 = news_db.Book.objects.select_related('pub').filter(pk=1)
         print(connection.queries)
 
+        author_list = news_db.Author.objects.values('id','name').filter(id__gt=0).order_by("-id")
+
         # zhangs = PersonModel.objects.select_related('living__province').get(name=u"张")
         # print(zhangs.living.province)
 
@@ -156,6 +158,7 @@ class Book(View):
         name = request.POST.get("name")
         title = request.POST.get("title")
         pub_id = request.POST.get("pub_id")
+        chk_author = request.POST.get("chk_author");
 
         next_url = request.get_full_path()
 
@@ -165,6 +168,13 @@ class Book(View):
             # print(pub_id)
             obj.save()
 
+            aus = chk_author.split(',')
+            # 先清空=============== ==============
+            obj.authors.clear()
+            for aid in aus:
+                author = news_db.Author.objects.get(id = aid)
+                obj.authors.add(author)
+            # 写入关联author =====================
             msg = "书籍 %s 添加成功,请刷新查看！" % name
             data = {'code':0,'msg':msg,'url':next_url}
 

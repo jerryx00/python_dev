@@ -95,7 +95,13 @@ $("#add-book").click(function(){
     var name = $("#add-name").val();
     var title = $("#add-title").val();
     var pub_id = $("#add-pub").val();
-    $.post("/news/book/",{'name':name,'title':title,'pub_id':pub_id},function(data){
+    var chk_author =[];
+    $.each($('input:checkbox:checked'),function(){
+        chk_author.push($(this).val());
+    });
+    var authors = chk_author.join(',');
+    console.log(chk_author);
+    $.post("/news/book/",{'name':name,'title':title,'pub_id':pub_id,'chk_author':authors},function(data){
         console.log(data);
         if(data.code != 0){
             $("#msg-alert").empty();

@@ -3,7 +3,7 @@
 
 
 {% block css %}
-<link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
 
 {% endblock %}
 
@@ -11,67 +11,72 @@
 {% block center %}
 
 
-<!--头部导航-->
-<div class="panel panel-default center-top" style="min-width:1300px;">
-  <div class="panel-body">
-    <ol class="breadcrumb" style="margin-bottom: 0px;background-color: #FFFFFF;">
-      <li><a href="/" style="color: #377CD8;">首页</a></li>
-      <li><a href="javascript:;">后台管理</a></li>
-      <li class="active">{{ title }}</li>
-    </ol>
-  </div>
-</div>
-
-
-
-<!--书籍信息-->
-<div class="panel panel-default center-top" style="min-width:1300px;">
-  <div class="panel-heading">
-      <div class="row" style="padding-top:5px;padding-left:10px;">
-          <div class="col-sm-6">
-              <a href="javascript:;" class="btn btn-sm btn-success" data-toggle="modal" data-target="#bookModal"> 添加书籍 </a>
-
-          </div>
-
-      </div>
-  </div>
-  <div class="panel-body">
-      <table class="table table-hover table-bordered">
-          <thead>
-            <tr style="background-color: #f5f5f5;">
-              <th>序号</th>
-              <th>名称</th>
-              <th>标题</th>
-              <th>出版社</th>
-
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for i in book_list %}
-          <tr name="tbody">
-              <td style="padding-top: 20px;">{{ forloop.counter }}</td>
-              <td style="padding-top: 20px;">{{ i.name }}</td>
-               <td style="padding-top: 20px;">{{ i.title }}</td>
-              <td style="padding-top: 20px;">{{ i.pub__name }}</td>
-
-              <td style="padding-top: 20px;">
-                  <a href="javascript:;" name="edit-book" book_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="left" title="修改"><span class="fa fa-pencil"></span> </a>&nbsp;&nbsp;&nbsp;
-                  <a href="javascript:;" name="del-book"  book_id="{{ i.id }}" style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span> </a>
-              </td>
-            </tr>
-            {% endfor %}
-
-          </tbody>
-
-      </table>
-
-    <div class="text-right" style="margin-top:-30px;padding-right:9%">
-      <ul class="pagination" id="pagination"></ul>
+    <!--头部导航-->
+    <div class="panel panel-default center-top" style="min-width:1300px;">
+        <div class="panel-body">
+            <ol class="breadcrumb" style="margin-bottom: 0px;background-color: #FFFFFF;">
+                <li><a href="/" style="color: #377CD8;">首页</a></li>
+                <li><a href="javascript:;">后台管理</a></li>
+                <li class="active">{{ title }}</li>
+            </ol>
+        </div>
     </div>
 
-  </div>
-</div>
+
+
+    <!--书籍信息-->
+    <div class="panel panel-default center-top" style="min-width:1300px;">
+        <div class="panel-heading">
+            <div class="row" style="padding-top:5px;padding-left:10px;">
+                <div class="col-sm-6">
+                    <a href="javascript:;" class="btn btn-sm btn-success" data-toggle="modal" data-target="#bookModal">
+                        添加书籍 </a>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr style="background-color: #f5f5f5;">
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>标题</th>
+                    <th>出版社</th>
+
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in book_list %}
+                    <tr name="tbody">
+                        <td style="padding-top: 20px;">{{ forloop.counter }}</td>
+                        <td style="padding-top: 20px;">{{ i.name }}</td>
+                        <td style="padding-top: 20px;">{{ i.title }}</td>
+                        <td style="padding-top: 20px;">{{ i.pub__name }}</td>
+
+                        <td style="padding-top: 20px;">
+                            <a href="javascript:;" name="edit-book" book_id="{{ i.id }}" style="text-decoration:none;"
+                               data-toggle="tooltip" data-placement="left" title="修改"><span class="fa fa-pencil"></span>
+                            </a>&nbsp;&nbsp;&nbsp;
+                            <a href="javascript:;" name="del-book" book_id="{{ i.id }}" style="text-decoration:none;"
+                               data-toggle="tooltip" data-placement="right" title="删除"><span class="fa fa-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <div class="text-right" style="margin-top:-30px;padding-right:9%">
+                <ul class="pagination" id="pagination"></ul>
+            </div>
+
+        </div>
+    </div>
 
 
 {% endblock %}
@@ -80,91 +85,114 @@
 <!-- Modal -->
 {% block modal %}
 
-<!--添加书籍-->
-<div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content" style="margin-top:135px;">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="bookModalLabel">添加书籍</h4>
-      </div>
-      <div class="modal-body">
+    <!--添加书籍-->
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top:135px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="bookModalLabel">添加书籍</h4>
+                </div>
+                <div class="modal-body">
 
-          <div class="form-group">
-            <label >名称</label>
-            <input  class="form-control"  placeholder="名称" id="add-name">
-          </div>
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input class="form-control" placeholder="名称" id="add-name">
+                    </div>
 
-          <div class="form-group">
-            <label >标题</label>
-            <input  class="form-control"  placeholder="标题" id="add-title">
-          </div>
+                    <div class="form-group">
+                        <label>标题</label>
+                        <input class="form-control" placeholder="标题" id="add-title">
+                    </div>
 
-          <div class="form-group">
-            <label >出版社</label>
-             <select  class="form-control"  id="add-pub">
-                {% for pub in pub_list %}
-              <option value="{{ pub.id }}">{{ pub.name }}</option>
-                {% endfor %}
-            </select>
-          </div>
-      </div>
+                    <div class="form-group">
+                        <label>出版社</label>
+                        <select class="form-control" id="add-pub">
+                            {% for pub in pub_list %}
+                                <option value="{{ pub.id }}">{{ pub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" id="icon-div">
+                        <label>作者</label>
+                        <table class="table" style="margin-top:5px;">
+                            <tbody id="icon-table">
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="add-book">提交</button>
-      </div>
+                            {% for author in author_list %}
+                                {% if forloop.counter|divisibleby:6 %}
+                                    <tr>
+                                {% endif %}
+                            <td style="padding-left:5px;">
+                                <input type="checkbox" name="chk_authtor" value="{{ author.id }}"/>{{ author.name }}-{{ author.id }}
+                            </td>
+                            {% if forloop.counter|divisibleby:6 %}
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="add-book">提交</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
-<!--修改书籍信息-->
-<div class="modal fade" id="edit-bookModal" tabindex="-1" role="dialog" aria-labelledby="edit-bookModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content" style="margin-top:135px;">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="edit-bookModalLabel">修改书籍</h4>
-      </div>
-      <div class="modal-body">
+    <!--修改书籍信息-->
+    <div class="modal fade" id="edit-bookModal" tabindex="-1" role="dialog" aria-labelledby="edit-bookModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top:135px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="edit-bookModalLabel">修改书籍</h4>
+                </div>
+                <div class="modal-body">
 
-          <div class="form-group">
-            <label >书名</label>
-            <input  class="form-control"  placeholder="书名" id="edit-name">
-          </div>
+                    <div class="form-group">
+                        <label>书名</label>
+                        <input class="form-control" placeholder="书名" id="edit-name">
+                    </div>
 
-          <div class="form-group">
-            <label >标题</label>
-            <input  class="form-control"  placeholder="标题" id="edit-title">
-          </div>
-             <div class="form-group">
-            <label >出版社</label>
-            <select  class="form-control"  id="edit-pub">
-                {% for pub in pub_list %}
-              <option value="{{ pub.id }}">{{ pub.name }}</option>
-                {% endfor %}
-            </select>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="sub-edit-book">提交</button>
-      </div>
+                    <div class="form-group">
+                        <label>标题</label>
+                        <input class="form-control" placeholder="标题" id="edit-title">
+                    </div>
+                    <div class="form-group">
+                        <label>出版社</label>
+                        <select class="form-control" id="edit-pub">
+                            {% for pub in pub_list %}
+                                <option value="{{ pub.id }}">{{ pub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="sub-edit-book">提交</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-{% endblock  %}
+{% endblock %}
 
 
 {% block js %}
 
-<script type="text/javascript" src="/static/js/auth_v2.js"></script>
-<script type="text/javascript" src="/static/js/news.js"></script>
-<script>
+    <script type="text/javascript" src="/static/js/auth_v2.js"></script>
+    <script type="text/javascript" src="/static/js/news.js"></script>
+    <script>
 
-</script>
+    </script>
 
 {% endblock %}
 

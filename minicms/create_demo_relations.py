@@ -21,6 +21,9 @@ def main():
     r = Restaurant(place=p1, serves_hot_dogs=True, serves_pizza=False)
     r.save()
 
+    r.place = p2
+    r.save()
+
 if __name__ == '__main__':
     main()
     print("Done!")
